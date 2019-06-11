@@ -165,7 +165,11 @@ class FileStorageObserver(RunObserver):
 
     def save_file(self, filename, target_name=None):
         target_name = target_name or os.path.basename(filename)
-        copyfile(filename, os.path.join(self.dir, target_name))
+        target_path = os.path.join(self.dir, target_name)
+        target_directory = os.path.dirname(target_path)
+        if target_directory != '' and not os.path.exists(target_directory):
+            os.makedirs(target_directory)
+        copyfile(filename, target_path)
 
     def save_cout(self):
         with open(os.path.join(self.dir, 'cout.txt'), 'ab') as f:
