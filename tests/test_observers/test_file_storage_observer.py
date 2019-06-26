@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # coding=utf-8
-from __future__ import division, print_function, unicode_literals
+
 import datetime
 import hashlib
 import os
@@ -11,9 +11,6 @@ import json
 
 from sacred.observers.file_storage import FileStorageObserver
 from sacred.metrics_logger import ScalarMetricLogEntry, linearize_metrics
-# pylint: disable=redefined-builtin
-from sacred.utils import FileExistsError  # py2 compat.
-# pylint: enable=redefined-builtin
 
 
 T1 = datetime.datetime(1999, 5, 4, 3, 2, 1, 0)
@@ -117,7 +114,7 @@ def test_fs_observer_started_event_creates_rundir(dir_obs, sample_run, monkeypat
         "status": "RUNNING"
     }
 
-    def mkdir_raises_file_exists(name):
+    def mkdir_raises_file_exists(name, mode=0o777):
         raise FileExistsError("File already exists: " + name)
 
     with monkeypatch.context() as m:

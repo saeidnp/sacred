@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # coding=utf-8
-from __future__ import division, print_function, unicode_literals
+
 import json
 import os
 import os.path
@@ -12,9 +12,6 @@ from sacred.dependencies import get_digest
 from sacred.observers.base import RunObserver
 from sacred import optional as opt
 from sacred.serializer import flatten
-# pylint: disable=redefined-builtin
-from sacred.utils import FileNotFoundError, FileExistsError  # py2 compat.
-# pylint: enable=redefined-builtin
 
 
 DEFAULT_FILE_STORAGE_PRIORITY = 20
@@ -52,17 +49,6 @@ class FileStorageObserver(RunObserver):
         self.cout = ""
         self.cout_write_cursor = 0
 
-    @staticmethod
-    def _makedirs(name, mode=0o777, exist_ok=False):
-        """ Wrapper of os.makedirs with fallback
-            for exist_ok on python 2.
-        """
-        try:
-            os.makedirs(name, mode, exist_ok)
-        except TypeError:
-            if not os.path.exists(name):
-                os.makedirs(name, mode)
-
     def _make_next_dir(self):
         dir_nrs = [int(d) for d in os.listdir(self.basedir)
                    if os.path.isdir(os.path.join(self.basedir, d)) and
@@ -73,7 +59,7 @@ class FileStorageObserver(RunObserver):
         self.dir = new_dir  # set only if mkdir is successful
 
     def _make_run_dir(self, _id):
-        self._makedirs(self.basedir, exist_ok=True)
+        os.makedirs(self.basedir, exist_ok=True)
         self.dir = None
         if _id is None:
             fail_count = 0
@@ -150,7 +136,7 @@ class FileStorageObserver(RunObserver):
         return os.path.relpath(self.dir, self.basedir) if _id is None else _id
 
     def find_or_save(self, filename, store_dir):
-        self._makedirs(store_dir, exist_ok=True)
+        os.makedirs(store_dir, exist_ok=True)
         source_name, ext = os.path.splitext(os.path.basename(filename))
         md5sum = get_digest(filename)
         store_name = source_name + '_' + md5sum + ext

@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # coding=utf-8
-from __future__ import division, print_function, unicode_literals
+
 import jsonpickle as json
 from jsonpickle.handlers import BaseHandler
 import json as _json
@@ -34,7 +34,7 @@ if opt.has_numpy:
 
     class NumpyGenericHandler(BaseHandler):
         def flatten(self, obj, data):
-            return np.asscalar(obj)
+            return obj.item()
 
         def restore(self, obj):
             return obj

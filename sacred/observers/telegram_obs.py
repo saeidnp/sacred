@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 # coding=utf-8
-from __future__ import division, print_function, unicode_literals
 
 from sacred.observers.base import RunObserver
 from sacred.config.config_files import load_config_file
@@ -77,8 +76,8 @@ class TelegramObserver(RunObserver):
         The file can be in any format supported by Sacred
         (.json, .pickle, [.yaml]).
         It has to specify a ``token`` and a ``chat_id`` and can optionally set
-        ``silent_completion``,``completed_text``, ``interrupted_text``, and
-        ``failed_text``.
+        ``silent_completion``, ``started_text``, ``completed_text``,
+        ``interrupted_text``, and ``failed_text``.
         """
         import telegram
         d = load_config_file(filename)
@@ -90,7 +89,8 @@ class TelegramObserver(RunObserver):
         else:
             raise ValueError("Telegram configuration file must contain "
                              "entries for 'token' and 'chat_id'!")
-        for k in ['started_text', 'completed_text', 'interrupted_text', 'failed_text']:
+        for k in ['started_text', 'completed_text', 'interrupted_text',
+                  'failed_text']:
             if k in d:
                 setattr(obs, k, d[k])
         return obs

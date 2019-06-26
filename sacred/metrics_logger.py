@@ -1,13 +1,9 @@
 #!/usr/bin/env python
 # coding=utf-8
 import datetime
-import sys
 import sacred.optional as opt
 
-if sys.version_info[0] == 2:
-    from Queue import Queue, Empty
-else:
-    from queue import Queue, Empty
+from queue import Queue, Empty
 
 
 class MetricsLogger(object):
@@ -43,9 +39,9 @@ class MetricsLogger(object):
         if opt.has_numpy:
             np = opt.np
             if isinstance(value, np.generic):
-                value = np.asscalar(value)
+                value = value.item()
             if isinstance(step, np.generic):
-                step = np.asscalar(step)
+                step = step.item()
         if step is None:
             step = self._metric_step_counter.get(metric_name, -1) + 1
         self._logged_metrics.put(
